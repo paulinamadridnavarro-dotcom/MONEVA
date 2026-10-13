@@ -1,0 +1,74 @@
+const Exam={n:10,cur:null,
+$:n=>U.money(n).replace(/\.00$/,''),
+B:[
+["¿Qué es el ahorro?",["La parte de tus ingresos que no gastas","El dinero que pides prestado","Lo que pagas de renta cada mes"],"Ahorrar es reservar una parte de tus ingresos en lugar de gastarla."],
+["Un presupuesto sirve para…",["Planear en qué usarás tu dinero antes de gastarlo","Aumentar automáticamente tus ingresos","Pagar menos impuestos"],"Un presupuesto es un plan de ingresos y gastos que te ayuda a decidir con anticipación."],
+["En la regla 50/30/20, ¿qué porcentaje se destina a necesidades?",["50%","30%","20%"],"50% necesidades, 30% deseos y 20% ahorro o pago de deudas."],
+["¿Cuál de estos es un gasto hormiga?",["El café o la botana diaria que compras sin darte cuenta","El pago mensual de la renta","La colegiatura del semestre"],"Los gastos hormiga son compras pequeñas y frecuentes que casi no notas, pero suman mucho al mes."],
+["Un fondo de emergencia suele cubrir…",["De 3 a 6 meses de tus gastos básicos","Una semana de gastos","Las vacaciones del año"],"Sirve para imprevistos como salud, desempleo o reparaciones, sin endeudarte."],
+["¿Qué significa CAT en un crédito?",["Costo Anual Total","Cuenta de Ahorro Temporal","Cargo Automático de Tarjeta"],"El CAT incluye intereses, comisiones y otros costos del crédito."],
+["¿Para qué sirve el CAT al elegir un crédito?",["Para comparar el costo total de distintas opciones","Para saber cuánto ahorrarás en el año","Para calcular tus impuestos"],"Mientras más bajo es el CAT, menos te cuesta el crédito en total."],
+["¿Qué institución en México defiende a los usuarios de servicios financieros?",["CONDUSEF","SAT","INEGI"],"La CONDUSEF atiende quejas y da información sobre productos financieros."],
+["¿Qué es la inflación?",["El aumento general y sostenido de los precios","La baja de las tasas de interés","El aumento de tu sueldo"],"Con inflación, el mismo dinero compra menos con el tiempo."],
+["Si la inflación es 5% anual y tu ahorro rinde 3% anual, tu poder de compra…",["Disminuye","Aumenta","Se mantiene igual"],"Tu dinero crece menos de lo que suben los precios, así que pierdes poder adquisitivo."],
+["¿Cuál es el banco central de México?",["Banco de México (Banxico)","Nacional Financiera","Banco del Bienestar"],"Banxico cuida el valor de la moneda y emite los billetes."],
+["¿Para qué sirve una AFORE?",["Para administrar tu ahorro para el retiro","Para prestarte dinero para una casa","Para asegurar tu auto"],"Las AFORE administran las cuentas individuales de ahorro para el retiro de los trabajadores."],
+["El interés compuesto significa que…",["Ganas intereses sobre tu capital y sobre los intereses ya acumulados","Solo ganas intereses sobre el depósito inicial","Pagas el interés una sola vez al final"],"Por eso empezar a ahorrar temprano pesa tanto: el tiempo potencia el efecto."],
+["Si pagas solo el pago mínimo de tu tarjeta de crédito…",["El saldo restante sigue generando intereses y tardas mucho más en liquidar la deuda","No pagas ningún interés","Tu deuda llega a cero ese mes"],"El pago mínimo es pequeño y el saldo que queda sigue generando intereses."],
+["Para no pagar intereses en tu tarjeta de crédito debes pagar…",["El pago para no generar intereses antes de la fecha límite","Solo el pago mínimo","Únicamente las compras del último día"],"Ese pago liquida el saldo del periodo; el mínimo no evita los intereses."],
+["La fecha de corte de una tarjeta de crédito es…",["El día en que se cierra tu estado de cuenta","El último día para pagar sin intereses","El día en que vence el plástico"],"Después del corte empieza un nuevo periodo; la fecha límite de pago llega unos días después."],
+["En el método avalancha para pagar deudas, pagas primero…",["La deuda con la tasa de interés más alta","La deuda de menor saldo","La deuda más antigua"],"Así reduces el total de intereses que pagas."],
+["En el método bola de nieve, pagas primero…",["La deuda de menor saldo","La deuda con la tasa más alta","La deuda de mayor saldo"],"Liquidar deudas pequeñas rápido motiva, aunque puede costar más intereses que la avalancha."],
+["¿Qué es el Buró de Crédito?",["Una empresa que registra tu historial de pagos de créditos","Un banco del gobierno","Un seguro para tus ahorros"],"Es una sociedad de información crediticia: guarda cómo has pagado tus deudas."],
+["Un buen historial crediticio se construye principalmente…",["Pagando a tiempo tus créditos y tarjetas","Pidiendo préstamos y dejándolos sin pagar","Cerrando todas tus cuentas bancarias"],"Pagar puntualmente es lo que más pesa en tu historial."],
+["¿Qué es un activo?",["Algo que posees y que tiene valor","Una deuda con el banco","Un gasto mensual"],"Ejemplos: ahorros, inversiones, una casa o un auto."],
+["¿Qué es un pasivo?",["Una deuda u obligación que debes pagar","Un bien que te genera ingresos","Dinero guardado en el banco"],"Ejemplos: una tarjeta con saldo, un préstamo o una hipoteca."],
+["El patrimonio neto se calcula como…",["Activos menos pasivos","Ingresos menos gastos","Ahorro más deudas"],"Es lo que realmente tienes después de restar lo que debes."],
+["Diversificar tus inversiones significa…",["Repartir tu dinero en distintas opciones para reducir el riesgo","Poner todo en una sola inversión segura","Invertir solo en lo que más rinde"],"Si una inversión baja, las demás pueden compensar."],
+["En general, la relación entre riesgo y rendimiento es…",["A mayor rendimiento esperado, mayor riesgo","A mayor rendimiento, menor riesgo","El riesgo no afecta al rendimiento"],"Las inversiones que prometen mucho rendimiento suelen implicar la posibilidad de perder."],
+["Los CETES son…",["Instrumentos de deuda emitidos por el gobierno federal","Acciones de empresas privadas","Un tipo de criptomoneda"],"Al comprar CETES le prestas dinero al gobierno a cambio de un rendimiento."],
+["¿Qué es una tasa de interés?",["El costo de usar dinero prestado, o lo que ganas por prestarlo","Un impuesto sobre tu sueldo","Una comisión fija por abrir una cuenta"],"Normalmente se expresa como porcentaje anual."],
+["Una suscripción que se cobra cada mes y ya no usas es…",["Un gasto recurrente que conviene cancelar o revisar","Un ingreso extra","Una inversión"],"Revisar tus suscripciones periódicamente evita pagar por lo que no usas."],
+["Antes de una compra grande a crédito, lo más sensato es…",["Calcular el costo total con intereses y revisar si cabe en tu presupuesto","Comprar de inmediato para aprovechar la oferta","Elegir siempre el pago mínimo"],"El precio a crédito suele ser mayor que el de contado."],
+["Conviene pagar primero las deudas con tasa muy alta antes de invertir porque…",["Los intereses que pagas suelen ser mayores que lo que ganarías invirtiendo","Las inversiones nunca generan rendimientos","Las deudas no generan intereses"],"Pagar una deuda al 40% anual te ahorra ese 40% en intereses, difícil de igualar invirtiendo."],
+["Una meta de ahorro bien planteada es…",["Específica, medible y con fecha límite","Vaga y sin plazo","Imposible de medir"],"Por ejemplo: juntar $30,000 en 12 meses."],
+["¿Qué hace el IPAB?",["Protege los depósitos bancarios hasta un límite","Cobra los impuestos","Administra tu AFORE"],"El Instituto para la Protección al Ahorro Bancario garantiza depósitos hasta cierto monto por persona y por banco."],
+["Una tasa de interés fija…",["Se mantiene igual durante el plazo del crédito","Cambia cada mes","Solo aplica a ahorros"],"Con tasa variable, en cambio, el costo puede subir o bajar."],
+["¿Cuál de estos es un gasto fijo?",["La renta","La salida a cenar","Un regalo de cumpleaños"],"Los gastos fijos se repiten con monto similar cada periodo."],
+["¿Qué debes hacer si te piden tu NIP o contraseña por llamada o mensaje?",["No compartirlos nunca: tu banco no los pide por esos medios","Darlos para verificar tu cuenta","Compartirlos solo si dicen que es urgente"],"Los fraudes suelen crear urgencia. Cuelga y llama tú al número oficial de tu banco."],
+["Una compra a meses sin intereses…",["Reparte el precio en mensualidades que igual debes incluir en tu presupuesto","Es gratis y no ocupa tu línea de crédito","Se paga hasta que tú quieras"],"Aunque no cobre intereses, cada mensualidad reduce tu dinero disponible y usa parte de tu límite."],
+["¿Qué es un seguro?",["Un contrato que te protege económicamente de un riesgo a cambio de una prima","Un ahorro que puedes retirar cuando quieras","Una inversión con rendimiento garantizado"],"Pagas una prima para que, si ocurre el evento cubierto, la aseguradora te compense."],
+["¿Cuál es el primer paso para mejorar tus finanzas personales?",["Registrar tus ingresos y gastos para saber a dónde se va tu dinero","Pedir un préstamo para invertir","Cancelar todas tus tarjetas"],"No se puede mejorar lo que no se mide."],
+["Si tu ingreso es variable (por ejemplo, comisiones), lo más prudente es…",["Presupuestar con un ingreso conservador y ahorrar en los meses buenos","Gastar todo en los meses buenos","Presupuestar con el mes más alto del año"],"Así cubres tus gastos aun en los meses bajos."]
+],
+rnd:(a,b)=>a+Math.floor(Math.random()*(b-a+1)),
+pick:a=>a[Math.floor(Math.random()*a.length)],
+shuf(a){const x=a.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x},
+fin(ok,wr){const s=[...new Set(wr.map(x=>Math.round(x)).filter(x=>x>0&&x!==ok))];let k=2;while(s.length<3){const c=Math.round(ok*(1+k*.25));if(c!==ok&&!s.includes(c))s.push(c);k++}return[ok,...s.slice(0,3)]},
+mk(q,o,ok,e){const s=Exam.shuf(o);return{q,o:s,a:s.indexOf(ok),e,pick:-1}},
+G:[
+()=>{const inc=Exam.rnd(16,60)*500,exp=Math.round(inc*Exam.rnd(60,92)/100/100)*100,ok=inc-exp;return{q:`Ganas ${Exam.$(inc)} al mes y gastas ${Exam.$(exp)}. ¿Cuánto ahorras?`,n:Exam.fin(ok,[inc+exp,exp,Math.round(ok/2)]),e:`Ahorro = ingresos − gastos = ${Exam.$(inc)} − ${Exam.$(exp)} = ${Exam.$(ok)}.`}},
+()=>{const inc=Exam.rnd(10,60)*500,g=Exam.pick([['necesidades',50],['deseos',30],['ahorro',20]]),ok=inc*g[1]/100,ot=[50,30,20,10,40].filter(p=>p!==g[1]).map(p=>inc*p/100);return{q:`Con la regla 50/30/20 y un ingreso de ${Exam.$(inc)}, ¿cuánto destinarías a ${g[0]}?`,n:Exam.fin(ok,ot),e:`${g[1]}% de ${Exam.$(inc)} = ${Exam.$(ok)}.`}},
+()=>{const c=Exam.rnd(5,50)*1000,r=Exam.pick([4,6,8,10,12]),ok=c*r/100;return{q:`Depositas ${Exam.$(c)} a una tasa de interés simple de ${r}% anual. ¿Cuánto interés ganas en 1 año?`,n:Exam.fin(ok,[c+ok,ok*2,c*r/1000]),e:`Interés = capital × tasa = ${Exam.$(c)} × ${r}% = ${Exam.$(ok)}.`}},
+()=>{const d=Exam.rnd(4,30)*1000,r=Exam.pick([24,36,48,60]),ok=Math.round(d*r/1200);return{q:`Debes ${Exam.$(d)} en una tarjeta con tasa de ${r}% anual. Aproximadamente, ¿cuánto interés se genera en un mes?`,n:Exam.fin(ok,[d*r/100,ok*2,Math.round(d/12)]),e:`Interés mensual ≈ saldo × tasa anual ÷ 12 = ${Exam.$(d)} × ${r}% ÷ 12 ≈ ${Exam.$(ok)}.`}},
+()=>{const m=Exam.pick([6,10,12]),pm=Exam.rnd(2,12)*250,meta=m*pm;return{q:`Quieres juntar ${Exam.$(meta)} en ${m} meses. ¿Cuánto debes ahorrar cada mes?`,n:Exam.fin(pm,[pm*2,pm+500,Math.round(meta/(m+4))]),e:`${Exam.$(meta)} ÷ ${m} meses = ${Exam.$(pm)} al mes.`}},
+()=>{const a=Exam.rnd(20,120)*1000,p=Exam.rnd(2,15)*1000,ok=a-p;return{q:`Tienes activos por ${Exam.$(a)} y deudas (pasivos) por ${Exam.$(p)}. ¿Cuál es tu patrimonio neto?`,n:Exam.fin(ok,[a+p,p,a]),e:`Patrimonio neto = activos − pasivos = ${Exam.$(a)} − ${Exam.$(p)} = ${Exam.$(ok)}.`}}
+],
+make(n){const set=S.settings();let used=(set.eduSeen||[]).filter(i=>Number.isInteger(i)&&i<Exam.B.length);const g=Math.round(n*.3),nb=n-g;
+let free=Exam.B.map((_,i)=>i).filter(i=>!used.includes(i));if(free.length<nb){used=[];free=Exam.B.map((_,i)=>i)}
+const ids=Exam.shuf(free).slice(0,nb),qs=ids.map(i=>{const x=Exam.B[i];return Exam.mk(x[0],x[1],x[1][0],x[2])}),gi=Exam.shuf(Exam.G.map((_,i)=>i));
+for(let k=0;k<g;k++){const r=Exam.G[gi[k%gi.length]]();qs.push(Exam.mk(r.q,r.n.map(v=>Exam.$(v)),Exam.$(r.n[0]),r.e))}
+S.write(K.set,{...set,eduSeen:used.concat(ids)});return Exam.shuf(qs)},
+start(box){Exam.cur={qs:Exam.make(Exam.n),done:false};Exam.draw(box);box.scrollIntoView({behavior:'smooth',block:'start'})},
+grade(box){const c=Exam.cur;if(!c||c.done)return;c.score=c.qs.filter(q=>q.pick===q.a).length;c.blank=c.qs.filter(q=>q.pick<0).length;c.done=true;const s=S.settings();
+S.write(K.set,{...s,eduExams:(s.eduExams||[]).concat({date:U.today(),score:c.score,total:c.qs.length}).slice(-30)});Exam.draw(box);box.scrollIntoView({behavior:'smooth',block:'start'})},
+draw(box){if(!box)return;const h=S.settings().eduExams||[],best=h.reduce((m,x)=>Math.max(m,x.score/x.total),0),c=Exam.cur;let body='';
+if(!c)body='<p class="text-sm text-mute py-2">Elige cuántas preguntas quieres y pulsa Nuevo examen.</p>';
+else{const pct=c.done?Math.round(c.score/c.qs.length*100):0;
+body=(c.done?`<div class="card bg-cream mb-4 text-center"><div class="text-3xl font-semibold">${c.score} de ${c.qs.length}</div><div class="text-sm text-mute">${pct}% · ${pct>=80?'Excelente resultado':pct>=60?'Buen avance':'Sigue practicando y revisa las explicaciones'}${c.blank?' · Dejaste '+c.blank+' sin responder':''}</div></div>`:'')+
+c.qs.map((q,i)=>`<fieldset class="mb-4"><legend class="text-sm font-medium mb-1">${i+1}. ${U.esc(q.q)}</legend>${q.o.map((o,j)=>{const cls=c.done?(j===q.a?'text-sage font-medium':j===q.pick?'text-terra':''):'';return `<label class="flex items-start gap-2 text-sm py-1 ${cls}"><input type="radio" name="q${i}" value="${j}"${q.pick===j?' checked':''}${c.done?' disabled':''} class="mt-1"><span>${U.esc(o)}</span></label>`}).join('')}${c.done?`<p class="text-xs mt-1 ${q.pick===q.a?'text-sage':'text-terra'}">${q.pick===q.a?'¡Correcto!':'Respuesta correcta: '+U.esc(q.o[q.a])+'.'} ${U.esc(q.e)}</p>`:''}</fieldset>`).join('')+
+(c.done?'<button class="btn btn-p" data-new>Nuevo examen</button>':'<button class="btn btn-p" id="egrade">Calificar examen</button>')}
+box.innerHTML=`<div class="flex justify-between items-end gap-3 flex-wrap mb-3"><div><b>Examen financiero</b><p class="text-xs text-mute">Cada examen se arma con preguntas nuevas: del banco de preguntas y con cifras generadas al azar.</p></div><div class="flex items-end gap-2"><div><label class="lbl" for="en">Preguntas</label><select id="en" class="inp">${U.opts(['5','10','15'],String(Exam.n))}</select></div><button class="btn btn-p" id="enew">Nuevo examen</button></div></div><p class="text-xs text-mute mb-3">Exámenes realizados: <b>${h.length}</b>${h.length?' · Mejor resultado: <b>'+Math.round(best*100)+'%</b>':''}</p>`+body;
+box.onchange=e=>{const t=e.target;if(t.id==='en')Exam.n=+t.value;else if(t.name&&t.name[0]==='q'&&Exam.cur&&!Exam.cur.done)Exam.cur.qs[+t.name.slice(1)].pick=+t.value};
+box.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='enew'||b.dataset.new!==undefined)Exam.start(box);else if(b.id==='egrade')Exam.grade(box)}}
+};

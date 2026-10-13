@@ -1,0 +1,2 @@
+// Muestra en pantalla cualquier error de carga o de ejecución (antes estaba en línea dentro de index.html).
+window.addEventListener('error',function(e){var t=e.target,m=(t&&(t.src||t.href))?'No se pudo cargar: '+(t.src||t.href):'Error: '+e.message+' ('+String(e.filename||'').split('/').pop()+':'+e.lineno+')';var d=document.createElement('div');d.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#D92D3A;color:#fff;padding:8px 12px;font:13px sans-serif;z-index:9999';d.textContent=m;document.documentElement.appendChild(d)},true);
