@@ -8,5 +8,7 @@
     "directory": ".",
     "not_found_handling": "404-page",
     "run_worker_first": ["/api/*"]
-  }
+  },
+  // Necesario para que Workers Builds publique las vistas previas de cada PR (npx wrangler preview).
+  "previews": {}
 }
