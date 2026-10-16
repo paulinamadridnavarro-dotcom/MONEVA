@@ -156,3 +156,8 @@ html[data-wall=menta] body{background:#D2E7D8!important}html[data-wall=arena] bo
 @media (max-width:420px){.bg-menu{grid-template-columns:repeat(2,auto)}}
 /* Visor de PDF */
 .pdfpage{margin:0 auto 14px;background:#fff;border-radius:4px;box-shadow:0 2px 12px rgba(20,24,40,.18);overflow:hidden;display:grid;place-items:center;color:#86868B;font-size:.8rem}
+/* Cuenta: correo y botón de cerrar sesión al pie del menú */
+.side-user{margin-top:18px;padding:12px 10px 4px;border-top:1px solid var(--hair)}
+.side-user-lbl{font-size:11px;color:var(--ink3);margin:0}
+.side-user-mail{font-size:13px;font-weight:600;color:var(--ink);margin:2px 0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side-user-btn{width:100%;justify-content:center}

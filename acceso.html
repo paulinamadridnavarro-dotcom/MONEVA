@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Moneva — Accede a tu cuenta</title>
+<style>
+:root{--accent:#0071E3;--accent-h:#0062C4;--ink:#1D1D1F;--ink2:#6E6E73;--hair:rgba(60,60,67,.14);--red:#D70015}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;color:var(--ink);background:linear-gradient(135deg,#E6ECFF 0%,#F6EEDF 50%,#E3F5EC 100%)}
+.card{width:100%;max-width:380px;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(28px);-webkit-backdrop-filter:saturate(180%) blur(28px);border:1px solid rgba(255,255,255,.75);border-radius:22px;padding:28px 24px;box-shadow:0 10px 34px -6px rgba(36,44,74,.16)}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.mark{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff 0 18%,transparent 19%),conic-gradient(from 200deg,#BFD0FF,#F3DDBD,#C9F0E1,#FFD3E2,#BFD0FF);box-shadow:inset 0 0 0 2px rgba(255,255,255,.85),0 2px 8px rgba(36,44,74,.18)}
+h1{font-size:24px;letter-spacing:-.02em;margin:0}
+.sub{color:var(--ink2);font-size:14px;margin:0 0 20px}
+.tabs{display:flex;background:rgba(118,118,128,.12);border-radius:11px;padding:3px;margin-bottom:18px}
+.tabs button{flex:1;border:0;background:transparent;padding:8px;border-radius:9px;font:inherit;font-size:14px;color:var(--ink2);cursor:pointer}
+.tabs button[aria-selected=true]{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 6px}
+input{width:100%;padding:11px 12px;border:1px solid var(--hair);border-radius:11px;font:inherit;font-size:16px;background:#fff;color:var(--ink)}
+input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--ink2);margin:6px 0 0}
+.go{width:100%;margin-top:20px;padding:12px;border:0;border-radius:11px;background:var(--accent);color:#fff;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.go:hover{background:var(--accent-h)}.go:disabled{opacity:.6;cursor:default}
+.err{color:var(--red);font-size:13px;margin:14px 0 0;min-height:1em}
+.foot{font-size:12px;color:var(--ink2);text-align:center;margin:18px 0 0}
+</style></head>
+<body>
+<main class="card">
+<div class="brand"><span class="mark" aria-hidden="true"></span><h1>Moneva</h1></div>
+<p class="sub">Tu acompañante financiero</p>
+<div class="tabs" role="tablist"><button id="tLogin" role="tab" aria-selected="true">Iniciar sesión</button><button id="tReg" role="tab" aria-selected="false">Crear cuenta</button></div>
+<form id="f" novalidate>
+<label for="email">Correo</label><input id="email" type="email" autocomplete="email" required>
+<label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password" required minlength="8">
+<div id="regOnly" hidden><p class="hint">Mínimo 8 caracteres.</p><label for="pw2">Repite la contraseña</label><input id="pw2" type="password" autocomplete="new-password"></div>
+<button class="go" id="go" type="submit">Entrar</button>
+<p class="err" id="err" role="alert"></p>
+</form>
+<p class="foot">Tus datos financieros quedan guardados en tu cuenta y solo tú puedes verlos.</p>
+</main>
+<script src="js/acceso.js"></script>
+</body></html>
