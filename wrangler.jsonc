@@ -1,0 +1,12 @@
+// Configuración de Cloudflare Workers: sirve la app estática desde esta carpeta
+// y pasa /api/* a worker.js (proxy del Agente IA hacia Gemini).
+{
+  "name": "moneva",
+  "compatibility_date": "2026-10-01",
+  "main": "worker.js",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  }
+}
