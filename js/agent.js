@@ -1,9 +1,12 @@
 // Agente IA de Moneva: asesor que lee tus datos reales (movimientos, deudas, metas,
 // presupuesto y retiro) y responde con reglas y estadística, igual que los demás
-// módulos — sin llamadas a servidores externos, para respetar que Moneva guarda
-// todo solo en tu navegador.
+// módulos. Por defecto no llama a ningún servidor. Si la persona activa "Usar IA
+// real" (y este Moneva está desplegado con su función /api/agent, ver
+// functions/api/agent.js), además manda el contexto YA CALCULADO —nunca
+// localStorage crudo— a un modelo de lenguaje para redactar mejor la respuesta.
 const Agent={
 hist:[],
+ENDPOINT:'/api/agent',
 QUICK:['¿En qué puedo mejorar?','Ayúdame a hacer un plan para pagar mis deudas','¿Cuál es mi gasto hormiga más notorio?','¿Cómo voy con mi presupuesto?','¿Voy bien para mi retiro?','¿Cómo van mis metas de ahorro?'],
 // Categorías "deseo" de la regla 50/30/20: todo lo que no es necesidad ni ahorro/deuda.
 wantCats(){return U.EXP.filter(c=>!Bud.G.need.c.includes(c)&&!Bud.G.save.c.includes(c))},
@@ -65,16 +68,58 @@ INTENTS:[
 ['resumen',['mejorar','resumen','consejo','recomiend','cómo voy','como voy','analiza'],'r_resumen'],
 ],
 match(q){const t=q.toLowerCase();for(const[,kws,fn]of Agent.INTENTS)if(kws.some(k=>t.includes(k)))return fn;return null},
+// Contexto JSON-seguro con todo lo que ya calculó el motor de reglas, para
+// mandárselo al LLM (nunca localStorage crudo, nunca sin pasar por el motor).
+fullContext(){return{deudas:Agent.deudas(),presupuesto:Agent.presupuesto(),gastoHormiga:Agent.hormiga(),retiro:Agent.retiro(),metas:S.goals()}},
+online(){return!!S.settings().agentOnline},
 ask(el,q){q=q.trim();if(!q)return;const fn=Agent.match(q);
-const resp=fn?Agent[fn]():'No tengo una respuesta preparada para esa pregunta todavía. Soy un agente basado en reglas (sin conexión a internet), así que por ahora solo entiendo temas de deudas, presupuesto, gasto hormiga, retiro y metas. Prueba con una de las preguntas sugeridas.';
-Agent.hist.push({q,resp});Agent.draw(el)},
+const resp=fn?Agent[fn]():'No tengo una respuesta preparada para esa pregunta con el motor local. Prueba con una de las preguntas sugeridas, o activa "Usar IA real" arriba para que un modelo de lenguaje intente responder preguntas más libres sobre tus datos.';
+const entry={q,resp,fuente:'local'};Agent.hist.push(entry);Agent.draw(el);
+if(Agent.online())Agent.askLLM(el,entry)},
+KEY:'moneva_gemini_key',
+fmt(t){return U.esc(t).replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/^\s*[*-]\s+/gm,'• ').replace(/\n/g,'<br>')},
+SYS:'Eres el Agente IA de Moneva, app de finanzas personales. Recibes datos YA CALCULADOS por el motor de reglas de la app (deudas, presupuesto 50/30/20, gasto hormiga, retiro, metas). No inventes ni recalcules cifras: usa solo los números dados. Responde en español de México, tono cálido y directo, máximo 180 palabras. Si la pregunta no es de las finanzas personales de quien pregunta, redirige amablemente. No eres asesor certificado.',
+getKey(){try{return localStorage.getItem(Agent.KEY)||''}catch(e){return''}},
+setKey(k){try{k?localStorage.setItem(Agent.KEY,k):localStorage.removeItem(Agent.KEY)}catch(e){}},
+GAPI:'https://generativelanguage.googleapis.com/v1beta/',
+async modelos(key){try{const r=await fetch(Agent.GAPI+'models?pageSize=200',{headers:{'x-goog-api-key':key},signal:AbortSignal.timeout(15000)});const d=await r.json();
+return(d.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')&&/flash/.test(m.name)&&!/image|tts|live|audio|embed|thinking|exp|robotics|computer/.test(m.name)).map(m=>m.name.replace('models/','')).sort((x,y)=>(/lite/.test(x)-/lite/.test(y))||y.localeCompare(x,'en',{numeric:true}))}catch(e){return[]}},
+async probar(m,key,body){const r=await fetch(Agent.GAPI+'models/'+m+':generateContent',{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':key},body,signal:AbortSignal.timeout(25000)});
+const d=await r.json().catch(()=>null);if(!r.ok){const e=new Error('HTTP '+r.status+(d&&d.error&&d.error.message?': '+d.error.message:''));e.status=r.status;throw e}
+const t=d&&d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts&&d.candidates[0].content.parts.map(x=>x.text||'').join('');if(!t)throw new Error('respuesta vacía');return t},
+async directGemini(entry,key){const txt='Pregunta: '+entry.q+'\n\nDatos calculados por Moneva (JSON):\n'+JSON.stringify(Agent.fullContext())+'\n\nRespuesta local de respaldo (no la contradigas en cifras):\n'+entry.resp.replace(/<[^>]*>/g,' ');
+const body=JSON.stringify({systemInstruction:{parts:[{text:Agent.SYS}]},contents:[{role:'user',parts:[{text:txt}]}],generationConfig:{maxOutputTokens:4096,temperature:0.4}});
+let last;
+const pasa=e=>e.status===404||e.status===503||e.status===500||e.status===429||e.name==='TimeoutError';
+const intentar=async lista=>{for(const m of lista){try{const t=await Agent.probar(m,key,body);Agent.modeloOk=m;return t}catch(e){last=e;if(!pasa(e))throw e}}return null};
+let lista=['gemini-flash-latest','gemini-2.5-flash','gemini-2.5-flash-lite','gemini-2.0-flash'];if(Agent.modeloOk)lista.unshift(Agent.modeloOk);
+lista=[...new Set(lista)];
+for(let ronda=0;ronda<3;ronda++){const t=await intentar(lista);if(t!=null)return t;
+if(ronda===0){const extra=(await Agent.modelos(key)).filter(m=>!lista.includes(m));lista=lista.concat(extra)}
+await new Promise(r=>setTimeout(r,1500*(ronda+1)))}
+throw last||new Error('sin modelos disponibles')},
+async askLLM(el,entry){entry.loading=true;Agent.draw(el);
+try{const key=Agent.getKey();let text;
+if(key){text=await Agent.directGemini(entry,key)}
+else{const r=await fetch(Agent.ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},
+body:JSON.stringify({pregunta:entry.q,contexto:Agent.fullContext(),respuestaLocal:entry.resp}),signal:AbortSignal.timeout(25000)});
+const d=await r.json().catch(()=>null);
+if(!r.ok||!d||!d.text)throw new Error(d&&d.error||('HTTP '+r.status));text=d.text}
+entry.resp=Agent.fmt(text);entry.fuente='ia'}
+catch(e){U.toast('No se pudo conectar con la IA ('+String(e.message).slice(0,90)+'); te dejo la respuesta del motor local.','err')}
+finally{entry.loading=false;Agent.draw(el)}},
 draw(el){const box=el.querySelector('#agHist');if(!box)return;
-box.innerHTML=Agent.hist.length?Agent.hist.map(h=>`<div class="mb-4"><p class="text-sm font-medium mb-1">${U.esc(h.q)}</p><div class="interp">${h.resp}</div></div>`).reverse().join(''):'<p class="text-sm text-mute">Elige una pregunta sugerida o escribe la tuya abajo.</p>'},
-render(el){el.innerHTML=`<div class="card mb-4"><h3 class="font-semibold mb-1">Agente IA de Moneva</h3><p class="text-sm text-mute">Analiza tus datos reales con las mismas reglas de los módulos de Moneva (deudas, presupuesto, gasto hormiga, retiro y metas) y te responde en lenguaje llano. Funciona sin internet: no envía tus datos a ningún servidor.</p></div>
+box.innerHTML=Agent.hist.length?Agent.hist.map(h=>`<div class="mb-4"><p class="text-sm font-medium mb-1">${U.esc(h.q)}</p><div class="interp">${h.resp}</div><p class="text-xs text-mute mt-1">${h.loading?'Mejorando la respuesta con IA…':h.fuente==='ia'?'Respuesta generada por IA (Gemini) a partir de tus datos.':'Respuesta del motor local de Moneva (sin internet).'}</p></div>`).reverse().join(''):'<p class="text-sm text-mute">Elige una pregunta sugerida o escribe la tuya abajo.</p>'},
+render(el){const on=Agent.online();
+el.innerHTML=`<div class="card mb-4"><h3 class="font-semibold mb-1">Agente IA de Moneva</h3><p class="text-sm text-mute">Analiza tus datos reales con las mismas reglas de los módulos de Moneva (deudas, presupuesto, gasto hormiga, retiro y metas) y te responde en lenguaje llano.</p>
+<label class="flex items-start gap-2 text-sm mt-3"><input id="agOn" type="checkbox"${on?' checked':''} class="mt-1"><span>Usar IA real (Gemini, requiere internet). Al activarla, tus datos ya calculados —no tu historial completo— se envían a Google para redactar la respuesta. Si falla, sigue con el motor local.</span></label>
+<div class="flex gap-2 flex-wrap items-end mt-3"><div class="flex-1 min-w-0"><label class="lbl" for="agKey">Tu clave gratuita de Gemini (se guarda solo en este navegador)</label><input id="agKey" type="password" class="inp" autocomplete="off" placeholder="AIza…" value="${U.esc(Agent.getKey())}"></div><button class="btn" id="agKeyBtn" type="button">Guardar clave</button></div></div>
 <div class="card mb-4"><p class="lbl">Preguntas sugeridas</p><div class="flex flex-wrap gap-2">${Agent.QUICK.map(q=>`<button class="btn" data-q="${U.esc(q)}">${U.esc(q)}</button>`).join('')}</div></div>
 <div class="card mb-4"><form id="agF" class="flex gap-2 flex-wrap items-end"><div class="flex-1 min-w-0"><label class="lbl" for="agQ">Escribe tu pregunta</label><input id="agQ" class="inp" placeholder="Ej. ¿en qué puedo mejorar?"></div><button class="btn btn-p">Preguntar</button></form></div>
 <div class="card" id="agHist"></div>`;
 Agent.draw(el);
+el.querySelector('#agOn').onchange=e=>{S.write(K.set,{...S.settings(),agentOnline:e.target.checked});U.toast(e.target.checked?'IA real activada.':'Vuelves al motor local.')};
+el.querySelector('#agKeyBtn').onclick=()=>{const k=el.querySelector('#agKey').value.trim();Agent.setKey(k);if(k&&!Agent.online()){S.write(K.set,{...S.settings(),agentOnline:true});el.querySelector('#agOn').checked=true}U.toast(k?'Clave guardada en este navegador. IA real activada.':'Clave eliminada.')};
 el.querySelector('#agF').onsubmit=e=>{e.preventDefault();const i=el.querySelector('#agQ');Agent.ask(el,i.value);i.value=''};
 el.onclick=e=>{const b=e.target.closest('[data-q]');if(b)Agent.ask(el,b.dataset.q)}}
 };
