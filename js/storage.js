@@ -29,6 +29,7 @@ if(typeof s.name==='string')o.name=V.s(s.name,60);
 const b=s.budget;if(b&&['need','want','save'].every(k=>Number.isInteger(b[k])&&b[k]>=0&&b[k]<=100)&&b.need+b.want+b.save===100)o.budget={need:b.need,want:b.want,save:b.save};
 if(V.n(s.debtExtra)&&s.debtExtra>=0)o.debtExtra=s.debtExtra;
 if(typeof s.debtIva==='boolean')o.debtIva=s.debtIva;
+if(typeof s.agentOnline==='boolean')o.agentOnline=s.agentOnline;
 if(s.ret&&typeof s.ret==='object'){const r={};['age','retAge','saved','pmt','rate','infl','spend'].forEach(k=>{if(V.n(s.ret[k])&&s.ret[k]>=0)r[k]=s.ret[k]});o.ret=r}
 if(s.edu&&typeof s.edu==='object'){const e={};Object.keys(s.edu).forEach(k=>{if(/^\d{1,2}$/.test(k))e[k]=s.edu[k]===true});o.edu=e}
 if(Array.isArray(s.eduSeen))o.eduSeen=s.eduSeen.filter(i=>Number.isInteger(i)&&i>=0&&i<1000);

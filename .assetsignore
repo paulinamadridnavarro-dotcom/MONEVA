@@ -1,0 +1,9 @@
+# Archivos del repositorio que no deben publicarse como parte del sitio.
+.git
+.assetsignore
+wrangler.jsonc
+worker.js
+functions
+tailwind.config.js
+tailwind.input.css
+.wrangler
